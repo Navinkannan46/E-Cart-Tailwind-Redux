@@ -4,12 +4,14 @@ import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToWishlist } from '../redux/slice/wishlistSlice'
+import { addToCart } from '../redux/slice/cartSlice'
 
 
 const View = () => {
     const { id } = useParams()
     const dispatch=useDispatch()
     const userWishlist=useSelector(state=>state.wishlishReducer)
+    const userCart=useSelector(state=>state.cartReducer)
     const [product, setproduct] = useState({})
     useEffect(() => {
         if (sessionStorage.getItem("allproducts")) {
@@ -26,6 +28,16 @@ const View = () => {
             alert("Product already in your whishlist!! ")
         }else{
             dispatch(addToWishlist(product))
+        }
+    }
+    const handleCart=()=>{
+        dispatch(addToCart(product))
+        const existingProduct=userCart.find(item=>item?.id==id)
+        if(existingProduct){
+            alert("Product Quantity is incrementing!! ")
+        }else{
+            alert("Product added to cart!!")
+
         }
     }
 
@@ -47,7 +59,7 @@ const View = () => {
                         </p>
                         <div className='flex justify-between mt-5'>
                             <button onClick={handleWishlist} className='bg-blue-600 text-white p-2'>Add to Wishlist</button>
-                            <button className='bg-green-600 text-white p-2'>Add to Cart</button>
+                            <button onClick={handleCart} className='bg-green-600 text-white p-2'>Add to Cart</button>
                         </div>
                         <h3 className="font-bold">Client Reviews</h3>
                         {
